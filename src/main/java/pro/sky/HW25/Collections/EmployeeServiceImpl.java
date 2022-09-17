@@ -2,9 +2,12 @@ package pro.sky.HW25.Collections;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private Employee[] employeeBook = {
+    private List<Employee> employeeBookList = List.of(
             new Employee("Константин", "Эрнст"),
             new Employee("Сергей", "Захаров"),
             new Employee("Илья", "Муромцев"),
@@ -14,8 +17,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             new Employee("Змей", "Горыновский"),
             new Employee(null, null),
             new Employee("Джек", "Воробьев"),
-            new Employee("Элизабет", "Свонс"),
-    };
+            new Employee("Элизабет", "Свонс"));
+    @Override
+    public String printAllList(Integer i) {
+        return this.employeeBookList.toString();
+    }
 
     @Override
     public String addEmployee(String firstName, String lastName) {
@@ -24,17 +30,17 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (firstName == "" || lastName == "") {
                 throw new EmptyDataException();
             }
-            for (counter = 0; counter < employeeBook.length; counter++) {
-                if (employeeBook[counter].getFirstName() == null) {
-                    employeeBook[counter].setFirstName(firstName);
-                    employeeBook[counter].setLastName(lastName);
+            for (counter = 0; counter < employeeBookList.size(); counter++) {
+                if (employeeBookList.get(counter).getFirstName() == null && employeeBookList.get(counter).getLastName() == null) {
+                    employeeBookList.get(counter).setFirstName(firstName);
+                    employeeBookList.get(counter).setLastName(lastName);
                     break;
-                } else if (employeeBook[counter].getFirstName().equals(firstName)
-                        && employeeBook[counter].getLastName().equals(lastName)) {
+                } else if (employeeBookList.get(counter).getFirstName().equals(firstName)
+                        && employeeBookList.get(counter).getLastName().equals(lastName)) {
                     throw new EmployeeAlreadyAddedException();
                 }
             }
-            if (counter >= employeeBook.length) {
+            if (counter >= employeeBookList.size()) {
                 throw new StorageIsFullException();
             }
         } catch (EmptyDataException e) {
@@ -44,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         } catch (EmployeeAlreadyAddedException e) {
             return "Ошибка, сотрудник уже добавлен";
         }
-        return "Сотрудник " + employeeBook[counter] + " добавлен! Номер сотрудника: " + (counter + 1);
+        return "Сотрудник " + employeeBookList.get(counter) + " добавлен! Номер сотрудника: " + (counter + 1);
     }
 
     @Override
@@ -54,16 +60,16 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (firstName == "" || lastName == "") {
                 throw new EmptyDataException();
             }
-            for (counter = 0; counter < employeeBook.length; counter++) {
-                if (employeeBook[counter].getFirstName() != null && employeeBook[counter].getLastName() != null &&
-                        employeeBook[counter].getFirstName().equals(firstName) &&
-                        employeeBook[counter].getLastName().equals(lastName)) {
-                    employeeBook[counter].setFirstName(null);
-                    employeeBook[counter].setLastName(null);
+            for (counter = 0; counter < employeeBookList.size(); counter++) {
+                if (employeeBookList.get(counter).getFirstName() != null && employeeBookList.get(counter).getLastName() != null &&
+                        employeeBookList.get(counter).getFirstName().equals(firstName) &&
+                        employeeBookList.get(counter).getLastName().equals(lastName)) {
+                    employeeBookList.get(counter).setFirstName(null);
+                    employeeBookList.get(counter).setLastName(null);
                     break;
                 }
             }
-            if (counter >= employeeBook.length) {
+            if (counter >= employeeBookList.size()) {
                 throw new EmployeeNotFoundException();
             }
         } catch (EmptyDataException e) {
@@ -71,7 +77,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         } catch (EmployeeNotFoundException e) {
             return "Сотрудник с таким именем и фамилией не найден";
         }
-        return "Сотрудник" + employeeBook[counter] + " успешно удален с позиции " + (counter + 1);
+        return "Сотрудник " + firstName + " " + lastName + " успешно удален с позиции " + (counter + 1) +" " + employeeBookList.get(counter);
     }
 
     @Override
@@ -81,13 +87,13 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (firstName == "" || lastName == "") {
                 throw new EmptyDataException();
             }
-            for (counter = 0; counter < employeeBook.length; counter++) {
-                if (employeeBook[counter].getFirstName() != null && employeeBook[counter].getLastName() != null &&
-                        employeeBook[counter].getFirstName().equals(firstName) && employeeBook[counter].getLastName().equals(lastName)) {
+            for (counter = 0; counter < employeeBookList.size(); counter++) {
+                if (employeeBookList.get(counter).getFirstName() != null && employeeBookList.get(counter).getLastName() != null &&
+                        employeeBookList.get(counter).getFirstName().equals(firstName) && employeeBookList.get(counter).getLastName().equals(lastName)) {
                     break;
                 }
             }
-            if (counter >= employeeBook.length) {
+            if (counter >= employeeBookList.size()) {
                 throw new EmployeeNotFoundException();
             }
         } catch (EmptyDataException e) {
@@ -95,16 +101,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         } catch (EmployeeNotFoundException e) {
             return "Такого сотрудника нет";
         }
-        return employeeBook[counter] + ". Номер сотрудника: " + (counter + 1);
+        return employeeBookList.get(counter) + ". Номер сотрудника: " + (counter + 1);
     }
 
     @Override
     public String hello(Integer e) {
         if (e == null) return "Введите все данные корректно";
-        if (employeeBook[e].getFirstName() == null || employeeBook[e].getLastName() == null) {
+        if (employeeBookList.get(e).getFirstName() == null || employeeBookList.get(e).getLastName() == null) {
             return "Ошибка, в массиве это поле пустое!";
         } else {
-            return "Привет " + employeeBook[e] + " !!";
+            return "Привет " + employeeBookList.get(e) + " !!";
         }
     }
 }
