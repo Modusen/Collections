@@ -8,6 +8,6 @@ public interface EmployeeService {
     public String findEmployee(String firstName, String lastName);
     public String hello(Integer e);
 
-    public String printAllList(Integer i);
+    public List<Employee> findAll();
 
 }
