@@ -2,13 +2,12 @@ package pro.sky.HW25.Collections;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private ArrayList<Employee> employeeBookList = new ArrayList();
+    private Map<String, Employee> employeeBookMap = new HashMap<>();
 
     @Override
     public List<Employee> findAll() {
@@ -22,16 +21,16 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (firstName == "" || lastName == "") {
                 throw new EmptyDataException();
             }
-            if (employeeBookList.contains(employee)) {
+            if (employeeBookMap.containsKey(employee.getFullName())) {
                 throw new EmployeeAlreadyAddedException();
             }
-            employeeBookList.add(employee);
+            employeeBookMap.put(employee.getFullName(), employee);
         } catch (EmptyDataException e) {
             return "Введены не все параметры!";
         } catch (EmployeeAlreadyAddedException e) {
             return "Ошибка, сотрудник уже добавлен";
         }
-        return "Сотрудник " + employee + " добавлен! Номер сотрудника: " + employeeBookList.indexOf(employee);
+        return "Сотрудник " + employee + " добавлен!";
     }
 
     @Override
@@ -42,8 +41,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (firstName == "" || lastName == "") {
                 throw new EmptyDataException();
             }
-            if (employeeBookList.contains(employee)) {
-                employeeBookList.remove(employee);
+            if (employeeBookMap.containsKey(employee.getFullName())) {
+                employeeBookMap.remove(employee.getFullName());
             } else {
                 throw new EmployeeNotFoundException();
             }
@@ -62,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (firstName == "" || lastName == "") {
                 throw new EmptyDataException();
             }
-            if (!employeeBookList.contains(employee)) {
+            if (!employeeBookMap.containsKey(employee.getFullName())) {
                 throw new EmployeeNotFoundException();
             }
         } catch (EmptyDataException e) {
@@ -70,16 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         } catch (EmployeeNotFoundException e) {
             return "Такого сотрудника нет";
         }
-        return employee + ". Номер сотрудника: " + employeeBookList.indexOf(employee);
+        return employee.getFullName();
     }
 
-    @Override
-    public String hello(Integer e) {
-        if (e == null) return "Введите все данные корректно";
-        if (employeeBookList.get(e).equals(null)) {
-            return "Ошибка, в массиве это поле пустое!";
-        } else {
-            return "Привет " + employeeBookList.get(e) + " !!";
-        }
-    }
 }
