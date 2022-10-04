@@ -3,22 +3,44 @@ package pro.sky.HW25.Collections;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private ArrayList<Employee> employeeBookList = new ArrayList();
     private Map<String, Employee> employeeBookMap = new HashMap<>();
 
     @Override
-    public List<Employee> findAll() {
-        return Collections.unmodifiableList(employeeBookList);
+    public List<Employee> employeeByDepartment(int department) {
+        final List<Employee> result = new ArrayList<>();
+        for (Employee employee : employeeBookMap.values()) {
+            if (employee.getDepartment() == department) {
+                result.add(employee);
+            }
+        }
+        return result;
     }
 
     @Override
-    public String addEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
+    public List<Integer> getAllDepartments() {
+        final HashSet<Integer> result = new HashSet<>();
+        for (Employee e : employeeBookMap.values()) {
+            result.add(e.getDepartment());
+        }
+        return result.stream().sorted().collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<Employee> findAll() {
+        return List.copyOf(employeeBookMap.values());
+    }
+
+    @Override
+    public String addEmployee(String firstName, String lastName, int salary, int department) {
+        Employee employee = new Employee(firstName, lastName, salary, department);
         try {
-            if (firstName == "" || lastName == "") {
+            if (firstName.equals("") || lastName.equals("")) {
                 throw new EmptyDataException();
             }
             if (employeeBookMap.containsKey(employee.getFullName())) {
@@ -36,9 +58,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public String deleteEmployee(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        int numberInList = 0;
         try {
-            if (firstName == "" || lastName == "") {
+            if (firstName.equals("") || lastName.equals("")) {
                 throw new EmptyDataException();
             }
             if (employeeBookMap.containsKey(employee.getFullName())) {
@@ -58,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public String findEmployee(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
         try {
-            if (firstName == "" || lastName == "") {
+            if (firstName.equals("") || lastName.equals("")) {
                 throw new EmptyDataException();
             }
             if (!employeeBookMap.containsKey(employee.getFullName())) {

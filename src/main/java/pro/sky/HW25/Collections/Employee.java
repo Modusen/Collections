@@ -5,6 +5,32 @@ import java.util.Objects;
 public class Employee {
     private final String firstName;
     private final String lastName;
+    private int salary;
+    private int department;
+
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+
+    public void setDepartment(int department) {
+        this.department = department;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public int getDepartment() {
+        return department;
+    }
+
+    public Employee(String firstName, String lastName, int salary, int department) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.salary = salary;
+        this.department = department;
+    }
 
     public Employee(String firstName, String lastName) {
         this.firstName = firstName;
@@ -18,14 +44,17 @@ public class Employee {
     public String getLastName() {
         return lastName;
     }
+
     public String getFullName() {
-        return firstName + lastName;
+        return firstName + " " + lastName;
     }
+
     @Override
     public String toString() {
-        return "{" +
-                "firstName='" + firstName + '\'' +
+        return '{' + "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", salary=" + salary +
+                ", department=" + department +
                 '}';
     }
 

@@ -1,13 +1,21 @@
 package pro.sky.HW25.Collections;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Stream;
 
 public interface EmployeeService {
-    public String addEmployee(String firstName, String lastName);
-    public String deleteEmployee(String firstName, String lastName);
-    public String findEmployee(String firstName, String lastName);
+    String addEmployee(String firstName, String lastName, int salary, int department);
+
+    String deleteEmployee(String firstName, String lastName);
+
+    String findEmployee(String firstName, String lastName);
 
 
-    public List<Employee> findAll();
+    List<Employee> employeeByDepartment(int department);
+
+    List<Integer> getAllDepartments();
+
+    List<Employee> findAll();
 
 }

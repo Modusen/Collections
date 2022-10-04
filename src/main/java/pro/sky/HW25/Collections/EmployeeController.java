@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
@@ -20,8 +18,8 @@ public class EmployeeController {
 
 
     @GetMapping(path = "/add")
-    public String addEmployee(@RequestParam("name") String firstName, @RequestParam("lastname") String lastName) {
-        return employeeService.addEmployee(firstName, lastName);
+    public String addEmployee(@RequestParam("name") String firstName, @RequestParam("lastname") String lastName, @RequestParam("salary") int salary, @RequestParam("department") int department) {
+        return employeeService.addEmployee(firstName, lastName, salary, department);
     }
 
     @GetMapping(path = "/delete")
