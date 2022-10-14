@@ -1,10 +1,10 @@
 package pro.sky.HW25.Collections;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -38,59 +38,72 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public String addEmployee(String firstName, String lastName, int salary, int department) {
-        Employee employee = new Employee(firstName, lastName, salary, department);
-        try {
-            if (firstName.equals("") || lastName.equals("")) {
-                throw new EmptyDataException();
+        Employee employee = new Employee(StringUtils.capitalize(firstName), StringUtils.capitalize(lastName), salary, department);
+        if (!(StringUtils.isAlpha(firstName) && StringUtils.isAlpha(lastName))) {
+            throw new IllegalInputException();
+        }else {
+            try {
+                if (StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName)) {
+                    throw new EmptyDataException();
+                }
+                if (employeeBookMap.containsKey(employee.getFullName())) {
+                    throw new EmployeeAlreadyAddedException();
+                }
+                employeeBookMap.put(employee.getFullName(), employee);
+
+            } catch (EmptyDataException e) {
+                return "Введены не все параметры!";
+            } catch (EmployeeAlreadyAddedException e) {
+                return "Ошибка, сотрудник уже добавлен";
             }
-            if (employeeBookMap.containsKey(employee.getFullName())) {
-                throw new EmployeeAlreadyAddedException();
-            }
-            employeeBookMap.put(employee.getFullName(), employee);
-        } catch (EmptyDataException e) {
-            return "Введены не все параметры!";
-        } catch (EmployeeAlreadyAddedException e) {
-            return "Ошибка, сотрудник уже добавлен";
+            return "Сотрудник " + employee + " добавлен!";
         }
-        return "Сотрудник " + employee + " добавлен!";
     }
 
     @Override
     public String deleteEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        try {
-            if (firstName.equals("") || lastName.equals("")) {
-                throw new EmptyDataException();
+        Employee employee = new Employee(StringUtils.capitalize(firstName), StringUtils.capitalize(firstName));
+        if (!(StringUtils.isAlpha(firstName) && StringUtils.isAlpha(lastName))) {
+            throw new IllegalInputException();
+        }else {
+            try {
+                if (StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName)) {
+                    throw new EmptyDataException();
+                }
+                if (employeeBookMap.containsKey(employee.getFullName())) {
+                    employeeBookMap.remove(employee.getFullName());
+                } else {
+                    throw new EmployeeNotFoundException();
+                }
+            } catch (EmptyDataException e) {
+                return "Введены не все параметры!";
+            } catch (EmployeeNotFoundException e) {
+                return "Сотрудник с таким именем и фамилией не найден";
             }
-            if (employeeBookMap.containsKey(employee.getFullName())) {
-                employeeBookMap.remove(employee.getFullName());
-            } else {
-                throw new EmployeeNotFoundException();
-            }
-        } catch (EmptyDataException e) {
-            return "Введены не все параметры!";
-        } catch (EmployeeNotFoundException e) {
-            return "Сотрудник с таким именем и фамилией не найден";
+            return "Сотрудник " + employee + " успешно удален";
         }
-        return "Сотрудник " + employee + " успешно удален";
     }
 
     @Override
     public String findEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        try {
-            if (firstName.equals("") || lastName.equals("")) {
-                throw new EmptyDataException();
+        Employee employee = new Employee(StringUtils.capitalize(firstName), StringUtils.capitalize(firstName));
+        if (!(StringUtils.isAlpha(firstName) && StringUtils.isAlpha(lastName))) {
+            throw new IllegalInputException();
+        } else {
+            try {
+                if (StringUtils.isEmpty(firstName) || StringUtils.isEmpty(lastName)) {
+                    throw new EmptyDataException();
+                }
+                if (!employeeBookMap.containsKey(employee.getFullName())) {
+                    throw new EmployeeNotFoundException();
+                }
+            } catch (EmptyDataException e) {
+                return "Введены не все параметры!";
+            } catch (EmployeeNotFoundException e) {
+                return "Такого сотрудника нет";
             }
-            if (!employeeBookMap.containsKey(employee.getFullName())) {
-                throw new EmployeeNotFoundException();
-            }
-        } catch (EmptyDataException e) {
-            return "Введены не все параметры!";
-        } catch (EmployeeNotFoundException e) {
-            return "Такого сотрудника нет";
+            return employee.getFullName();
         }
-        return employee.getFullName();
     }
 
 }
