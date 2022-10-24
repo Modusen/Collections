@@ -5,24 +5,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/departments")
 public class DepartmentController {
 
-    private final EmployeeService employeeService;
+    private final DepartmentService departmentService;
 
-    public DepartmentController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
+    public DepartmentController(DepartmentService departmentService) {
+        this.departmentService = departmentService;
     }
 
     @GetMapping(path = "/allInDepartment")
     public String employeeByDepartment(@RequestParam("department") int department) {
-        final List<Employee> employees = employeeService.employeeByDepartment(department);
+        final List<Employee> employees = departmentService.employeeByDepartment(department);
 
         // Iter
 //        for (Employee e : employees) {
@@ -41,31 +40,17 @@ public class DepartmentController {
     }
 
     @GetMapping(path = "/all")
-    public List<String> printEmployeeByDepartment() {
-        final List<Integer> allDepartments = employeeService.getAllDepartments();
-        final List<String> arrayForAll = new ArrayList<>();
-        for (Integer num : allDepartments) {
-            final List<Employee> employees = employeeService.employeeByDepartment(num);
-            arrayForAll.add("Департамент № "+num);
-            List<String> streamFullNames = employees.stream().
-                    map(e -> e.getFullName()).
-                    collect(Collectors.toList());
-            arrayForAll.add(streamFullNames.toString());
-        }
-        return arrayForAll;
+    public Map<Integer, List<Employee>> printEmployeeByEveryDepartment() {
+       return departmentService.printEmployeeByEveryDepartment();
     }
 
     @GetMapping(path = "/min-salary")
-    public String getMinimumSalaryInDepartment(@RequestParam("department") int department) {
-        final List<Employee> employees = employeeService.employeeByDepartment(department);
-
-        return employees.stream().min(Comparator.comparingInt(e -> e.getSalary())).toString();
+    public Employee getMinimumSalaryInDepartment(@RequestParam("department") int department) {
+        return departmentService.getMinimumSalaryInDepartment(department);
     }
 
     @GetMapping(path = "/max-salary")
-    public String getMaximumSalaryInDepartment(@RequestParam("department") int department) {
-        final List<Employee> employees = employeeService.employeeByDepartment(department);
-
-        return employees.stream().max(Comparator.comparingInt(e -> e.getSalary())).toString();
+    public Employee getMaximumSalaryInDepartment(@RequestParam("department") int department) {
+        return departmentService.getMaximumSalaryInDepartment(department);
     }
 }

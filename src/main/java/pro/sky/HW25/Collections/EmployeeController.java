@@ -1,6 +1,5 @@
 package pro.sky.HW25.Collections;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +13,7 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     public EmployeeController(EmployeeService employeeService) {
+
         this.employeeService = employeeService;
     }
 
@@ -35,6 +35,6 @@ public class EmployeeController {
 
     @GetMapping(path = "/printall")
     public Collection<Employee> findAll() {
-        return employeeService.findAll();
+        return (Collection<Employee>) employeeService.findAll();
     }
 }
